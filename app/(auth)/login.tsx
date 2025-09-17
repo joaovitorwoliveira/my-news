@@ -1,4 +1,6 @@
-import { router } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
+import { authService } from "@/services/auth";
+import { Redirect, router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
 import { Button, TextInput } from "../../components/ui";
@@ -7,6 +9,11 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { checkAuthStatus, isLoggedIn } = useAuth();
+
+  if (isLoggedIn) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -16,10 +23,21 @@ export default function LoginScreen() {
 
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const result = await authService.login(email, password);
+
+      if (result.success) {
+        await checkAuthStatus();
+        router.replace("/(tabs)");
+      } else {
+        Alert.alert("Erro", result.message || "Erro ao fazer login");
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      Alert.alert("Erro", "Ocorreu um erro inesperado");
+    } finally {
       setIsLoading(false);
-      Alert.alert("Sucesso", "Login realizado com sucesso!");
-    }, 2000);
+    }
   };
 
   return (

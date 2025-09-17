@@ -1,6 +1,8 @@
+import { useAuth } from "@/hooks/useAuth";
+import { authService } from "@/services/auth";
 import { FormData, FormErrors } from "@/types/login/types";
-import { router } from "expo-router";
-import React, { useState } from "react";
+import { Redirect, router } from "expo-router";
+import { useState } from "react";
 import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { Button, TextInput } from "../../components/ui";
 
@@ -13,6 +15,11 @@ export default function SignUpScreen() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { checkAuthStatus, isLoggedIn } = useAuth();
+
+  if (isLoggedIn) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -48,10 +55,24 @@ export default function SignUpScreen() {
 
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const result = await authService.signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (result.success) {
+        await checkAuthStatus();
+        router.replace("/(tabs)");
+      } else {
+        Alert.alert("Erro", result.message || "Erro ao realizar cadastro");
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Ocorreu um erro inesperado");
+    } finally {
       setIsLoading(false);
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-    }, 2000);
+    }
   };
 
   const updateField = (field: keyof FormData, value: string) => {
