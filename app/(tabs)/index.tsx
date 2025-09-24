@@ -1,38 +1,34 @@
+import { NewsCard } from "@/components/NewsCard";
 import { useAuth } from "@/hooks/useAuth";
-import { router } from "expo-router";
+import { mockNews } from "@/utils/mockData";
 import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
-  const { user, logout } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      const result = await logout();
-
-      if (result.success) {
-        router.replace("/(auth)/login");
-      } else {
-        Alert.alert("Erro", result.message || "Erro ao fazer logout");
-      }
-    } catch (error) {
-      Alert.alert("Erro", "Erro inesperado durante o logout");
-    }
-  };
+  const { user } = useAuth();
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.content}>
-        <Text style={styles.title}>Home</Text>
-        <Text style={styles.welcomeText}>
+        <Text style={styles.greeting}>
           Bem-vindo ao MyNews, {user?.name || user?.email}!
         </Text>
+
+        <FlatList
+          data={mockNews}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.feedContent}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={() => (
+            <View style={styles.feedHeader}>
+              <Text style={styles.sectionTitle}>Últimas notícias</Text>
+              <Text style={styles.sectionSubtitle}>
+                Acompanhe o que está acontecendo agora mesmo.
+              </Text>
+            </View>
+          )}
+          renderItem={({ item }) => <NewsCard item={item} />}
+        />
       </View>
     </View>
   );
@@ -43,38 +39,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    padding: 16,
-    paddingTop: 60, // Para compensar a status bar
-  },
-  logoutButton: {
-    backgroundColor: "#ef4444",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  logoutText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 14,
-  },
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
+    // Para compensar a status bar
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
+  greeting: {
+    fontSize: 22,
+    fontWeight: "700",
     color: "#1f2937",
+    marginBottom: 24,
   },
-  welcomeText: {
-    fontSize: 16,
+  feedContent: {
+    paddingBottom: 40,
+  },
+  feedHeader: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: 4,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
     color: "#6b7280",
-    textAlign: "center",
   },
 });

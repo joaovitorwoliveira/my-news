@@ -1,5 +1,4 @@
 import { authService } from "@/services/auth";
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
 
 interface User {
@@ -37,19 +36,19 @@ export function useAuth() {
       console.log("Iniciando logout...");
       setIsLoading(true);
 
+      // Primeiro limpa o estado local para prevenir interferências
+      setIsLoggedIn(false);
+      setUser(null);
+
       const result = await authService.logout();
       console.log("Resultado do logout:", result);
 
-      if (result.success) {
-        setIsLoggedIn(false);
-        setUser(null);
-        console.log("Estado limpo, redirecionando...");
-
-        router.replace("/(auth)/login");
-      }
       return result;
     } catch (error) {
       console.error("Erro durante logout:", error);
+      // Mesmo em caso de erro, limpa o estado local
+      setIsLoggedIn(false);
+      setUser(null);
       return { success: false, message: "Erro durante o logout" };
     } finally {
       setIsLoading(false);

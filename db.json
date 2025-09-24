@@ -5,6 +5,12 @@
       "name": "João Vitor",
       "email": "joao@email.com",
       "password": "Senha123!"
+    },
+    {
+      "id": "c679",
+      "name": "Carlos Bigode",
+      "email": "carlosbigode@email.com",
+      "password": "Senha123!"
     }
   ]
 }

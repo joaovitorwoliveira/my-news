@@ -5,26 +5,26 @@ import { Text, View } from "react-native";
 
 export default function Index() {
   const { isLoggedIn, isLoading, checkAuthStatus } = useAuth();
-  const [forceReload, setForceReload] = useState(0);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   useEffect(() => {
-    checkAuthStatus();
+    const performInitialCheck = async () => {
+      if (!initialCheckDone) {
+        await checkAuthStatus();
+        setInitialCheckDone(true);
+      }
+    };
 
-    const interval = setInterval(() => {
-      checkAuthStatus();
-      setForceReload((prev) => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+    performInitialCheck();
+  }, [initialCheckDone]);
 
   console.log(
     "Index: isLoading:",
     isLoading,
     "isLoggedIn:",
     isLoggedIn,
-    "forceReload:",
-    forceReload
+    "initialCheckDone:",
+    initialCheckDone
   );
 
   if (isLoading) {
