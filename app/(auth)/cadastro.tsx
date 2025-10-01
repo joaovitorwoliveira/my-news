@@ -21,27 +21,59 @@ export default function SignUpScreen() {
     return <Redirect href="/(tabs)" />;
   }
 
+  const validateField = (field: keyof FormData): string | undefined => {
+    switch (field) {
+      case "name":
+        if (!formData.name.trim()) {
+          return "Nome é obrigatório";
+        }
+        break;
+
+      case "email":
+        if (!formData.email.trim()) {
+          return "Email é obrigatório";
+        }
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+          return "Email inválido";
+        }
+        break;
+
+      case "password":
+        if (!formData.password) {
+          return "Senha é obrigatória";
+        }
+        if (formData.password.length < 6) {
+          return "Senha deve ter pelo menos 6 caracteres";
+        }
+        break;
+
+      case "confirmPassword":
+        if (formData.password !== formData.confirmPassword) {
+          return "Senhas não coincidem";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return undefined;
+  };
+
   const validateForm = () => {
     const newErrors: FormErrors = {};
+    const fields: Array<keyof FormData> = [
+      "name",
+      "email",
+      "password",
+      "confirmPassword",
+    ];
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Nome é obrigatório";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email é obrigatório";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email inválido";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Senha é obrigatória";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Senhas não coincidem";
+    for (const field of fields) {
+      const error = validateField(field);
+      if (error) {
+        newErrors[field] = error;
+      }
     }
 
     setErrors(newErrors);

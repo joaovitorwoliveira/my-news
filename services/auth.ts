@@ -1,16 +1,10 @@
+import { User } from "@/types/login/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000",
 });
-
-interface User {
-  id?: number;
-  email: string;
-  password: string;
-  name?: string;
-}
 
 export const AUTH_TOKEN_KEY = "@auth_token";
 

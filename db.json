@@ -11,6 +11,12 @@
       "name": "Carlos Bigode",
       "email": "carlosbigode@email.com",
       "password": "Senha123!"
+    },
+    {
+      "id": "420f",
+      "name": "João Teste",
+      "email": "joaoteste@email.com",
+      "password": "Senha123!"
     }
   ]
 }

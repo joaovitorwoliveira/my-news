@@ -1,11 +1,6 @@
 import { authService } from "@/services/auth";
+import { User } from "@/types/login/types";
 import { useEffect, useState } from "react";
-
-interface User {
-  id?: number;
-  email: string;
-  name?: string;
-}
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,8 +30,6 @@ export function useAuth() {
     try {
       console.log("Iniciando logout...");
       setIsLoading(true);
-
-      // Primeiro limpa o estado local para prevenir interferências
       setIsLoggedIn(false);
       setUser(null);
 
@@ -46,7 +39,6 @@ export function useAuth() {
       return result;
     } catch (error) {
       console.error("Erro durante logout:", error);
-      // Mesmo em caso de erro, limpa o estado local
       setIsLoggedIn(false);
       setUser(null);
       return { success: false, message: "Erro durante o logout" };
