@@ -1,21 +1,48 @@
 import { NewsItem } from "@/types/news/types";
+import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type NewsCardProps = {
   item: NewsItem;
 };
 
 export function NewsCard({ item }: NewsCardProps) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push({
+      pathname: "/(tabs)/noticia/[id]",
+      params: {
+        id: item.id,
+        title: item.title,
+        summary: item.summary,
+        category: item.category,
+        publishedAt: item.publishedAt,
+        source: item.source || "",
+        author: item.author || "",
+        url: item.url || "",
+        imageUrl: item.imageUrl || "",
+      },
+    });
+  };
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={handlePress}
+      activeOpacity={0.7}
+    >
       <View style={styles.cardHeader}>
         <Text style={styles.category}>{item.category}</Text>
         <Text style={styles.timestamp}>{item.publishedAt}</Text>
       </View>
       <Text style={styles.cardTitle}>{item.title}</Text>
-      <Text style={styles.cardSummary}>{item.summary}</Text>
-    </View>
+      <Text style={styles.cardSummary} numberOfLines={3}>
+        {item.summary}
+      </Text>
+      {item.source && <Text style={styles.source}>📰 {item.source}</Text>}
+    </TouchableOpacity>
   );
 }
 
@@ -56,5 +83,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#4b5563",
     lineHeight: 20,
+    marginBottom: 8,
+  },
+  source: {
+    fontSize: 12,
+    color: "#6b7280",
+    fontWeight: "500",
+    marginTop: 4,
   },
 });

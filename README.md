@@ -1,20 +1,40 @@
-# Welcome to your Expo app 👋
+# MyNews - Aplicativo de Notícias
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo de notícias em tempo real construído com React Native e Expo, integrado com a [NewsAPI](https://newsapi.org/).
 
-## Get started
+## Funcionalidades
 
-1. Install dependencies
+- 📰 Notícias em tempo real do Brasil e do mundo
+- 🔄 Pull to refresh para atualizar notícias
+- 🔐 Sistema de autenticação
+- 📱 Interface moderna e responsiva
+- 🌐 Integração com NewsAPI para conteúdo atualizado
 
-   ```bash
-   npm install
-   ```
+## Configuração
 
-2. Start the app
+### 1. Install dependencies
 
-   ```bash
-   npx expo start
-   ```
+```bash
+npm install
+```
+
+### 2. Configurar NewsAPI
+
+1. Crie uma conta gratuita em [newsapi.org](https://newsapi.org/)
+2. Obtenha sua API key no dashboard
+3. Crie um arquivo `.env` na raiz do projeto:
+
+```bash
+NEWS_API_KEY=sua_chave_api_aqui
+```
+
+⚠️ **Importante**: O arquivo `.env` não deve ser commitado no Git. Ele já está incluído no `.gitignore`.
+
+### 3. Start the app
+
+```bash
+npx expo start
+```
 
 In the output, you'll find options to open the app in a
 
@@ -25,15 +45,40 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
+## Estrutura do Projeto
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+my-news/
+├── app/                    # Rotas e telas do app (expo-router)
+│   ├── (auth)/            # Telas de autenticação
+│   └── (tabs)/            # Telas principais com navegação
+├── components/            # Componentes reutilizáveis
+├── hooks/                 # Custom hooks (useAuth, useNews)
+├── services/              # Serviços de API (auth, news)
+├── types/                 # Definições de tipos TypeScript
+└── utils/                 # Utilitários e dados mockados
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## API de Notícias
+
+O app utiliza a [NewsAPI](https://newsapi.org/docs/get-started) para buscar notícias. Principais endpoints utilizados:
+
+- **Top Headlines** (`/v2/top-headlines`): Principais manchetes do Brasil
+- **Everything** (`/v2/everything`): Busca de notícias por palavra-chave
+
+### Limitações da API (Plano Gratuito)
+
+- Máximo de 100 requisições por dia
+- Notícias até 24 horas atrás apenas
+- Sem acesso a algumas fontes premium
+
+### Fallback
+
+O app possui dados mockados como fallback caso:
+
+- A API key não esteja configurada
+- O limite de requisições seja atingido
+- Ocorra erro de conexão
 
 ## Learn more
 

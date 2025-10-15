@@ -17,6 +17,12 @@
       "name": "João Teste",
       "email": "joaoteste@email.com",
       "password": "Senha123!"
+    },
+    {
+      "id": "55f7",
+      "name": "joao oliveira",
+      "email": "joaoteste2@email.com",
+      "password": "senha123"
     }
   ]
 }
