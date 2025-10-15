@@ -4,25 +4,39 @@
       "id": "d06d",
       "name": "João Vitor",
       "email": "joao@email.com",
-      "password": "Senha123!"
+      "password": "Senha123!",
+      "preferences": {
+        "categories": [
+          "Tecnologia"
+        ]
+      }
     },
     {
       "id": "c679",
       "name": "Carlos Bigode",
       "email": "carlosbigode@email.com",
-      "password": "Senha123!"
+      "password": "Senha123!",
+      "preferences": {
+        "categories": []
+      }
     },
     {
       "id": "420f",
       "name": "João Teste",
       "email": "joaoteste@email.com",
-      "password": "Senha123!"
+      "password": "Senha123!",
+      "preferences": {
+        "categories": []
+      }
     },
     {
       "id": "55f7",
       "name": "joao oliveira",
       "email": "joaoteste2@email.com",
-      "password": "senha123"
+      "password": "senha123",
+      "preferences": {
+        "categories": []
+      }
     }
   ]
 }

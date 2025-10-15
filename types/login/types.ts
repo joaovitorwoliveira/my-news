@@ -3,6 +3,9 @@ export interface User {
   email: string;
   password?: string;
   name?: string;
+  preferences?: {
+    categories?: string[];
+  };
 }
 
 export interface FormData {

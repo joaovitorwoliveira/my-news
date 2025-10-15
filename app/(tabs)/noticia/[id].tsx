@@ -14,7 +14,6 @@ export default function NoticiaDetalhe() {
   const params = useLocalSearchParams();
   const router = useRouter();
 
-  // Desestrutura os parâmetros
   const {
     title,
     summary,
@@ -43,7 +42,6 @@ export default function NoticiaDetalhe() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header com botão voltar */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -53,7 +51,6 @@ export default function NoticiaDetalhe() {
         </TouchableOpacity>
       </View>
 
-      {/* Imagem da notícia */}
       {imageUrl && (
         <Image
           source={{ uri: imageUrl }}
@@ -62,27 +59,21 @@ export default function NoticiaDetalhe() {
         />
       )}
 
-      {/* Conteúdo */}
       <View style={styles.content}>
-        {/* Categoria e data */}
         <View style={styles.metadata}>
           <Text style={styles.category}>{category}</Text>
           <Text style={styles.publishedAt}>{publishedAt}</Text>
         </View>
 
-        {/* Título */}
         <Text style={styles.title}>{title}</Text>
 
-        {/* Fonte e autor */}
         <View style={styles.sourceContainer}>
           {source && <Text style={styles.source}>📰 {source}</Text>}
           {author && <Text style={styles.author}>✍️ {author}</Text>}
         </View>
 
-        {/* Resumo/Descrição */}
         <Text style={styles.summary}>{summary}</Text>
 
-        {/* Botão para ler matéria completa */}
         {url && (
           <TouchableOpacity
             style={styles.readMoreButton}

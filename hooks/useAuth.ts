@@ -1,5 +1,7 @@
 import { authService } from "@/services/auth";
+import { preferencesService } from "@/services/preferences";
 import { User } from "@/types/login/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
 export function useAuth() {
@@ -23,6 +25,47 @@ export function useAuth() {
       setUser(null);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateUserPreferences = async (categories: string[]) => {
+    try {
+      if (!user?.id) {
+        return { success: false, message: "Usuário não encontrado" };
+      }
+
+      const result = await preferencesService.saveUserPreferences(
+        user.id.toString(),
+        categories
+      );
+
+      if (result.success) {
+        const updatedUser = {
+          ...user,
+          preferences: {
+            categories,
+          },
+        };
+
+        setUser(updatedUser);
+        await AsyncStorage.setItem("@auth_token", JSON.stringify(updatedUser));
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Erro ao atualizar preferências:", error);
+      return { success: false, message: "Erro ao atualizar preferências" };
+    }
+  };
+
+  const refreshUserData = async () => {
+    try {
+      const currentUser = await authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    } catch (error) {
+      console.error("Erro ao recarregar dados do usuário:", error);
     }
   };
 
@@ -52,6 +95,8 @@ export function useAuth() {
     isLoading,
     user,
     checkAuthStatus,
+    updateUserPreferences,
+    refreshUserData,
     logout,
   };
 }
