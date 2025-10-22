@@ -6,9 +6,13 @@ Aplicativo de notícias em tempo real construído com React Native e Expo, integ
 
 - 📰 Notícias em tempo real do Brasil e do mundo
 - 🔄 Pull to refresh para atualizar notícias
-- 🔐 Sistema de autenticação
-- 📱 Interface moderna e responsiva
+- 🔐 Sistema completo de autenticação (login/cadastro)
+- 📱 Interface moderna e responsiva com NativeWind/Tailwind
 - 🌐 Integração com NewsAPI para conteúdo atualizado
+- ⚙️ Sistema de preferências personalizáveis por categoria
+- 📖 Visualização detalhada de notícias
+- 💾 Cache inteligente para melhor performance
+- 🔍 Filtros de notícias por categoria
 
 ## Configuração
 
@@ -25,10 +29,10 @@ npm install
 3. Crie um arquivo `.env` na raiz do projeto:
 
 ```bash
-NEWS_API_KEY=sua_chave_api_aqui
+EXPO_PUBLIC_API_URL="SUA CHAVE DA API"
+EXPO_PUBLIC_NEWS_API_BASE_URL=https://newsapi.org/v2
+EXPO_PUBLIC_API_URL="http://localhost:3000"
 ```
-
-⚠️ **Importante**: O arquivo `.env` não deve ser commitado no Git. Ele já está incluído no `.gitignore`.
 
 ### 3. Start the app
 
@@ -36,27 +40,35 @@ NEWS_API_KEY=sua_chave_api_aqui
 npx expo start
 ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
 ## Estrutura do Projeto
 
 ```
 my-news/
 ├── app/                    # Rotas e telas do app (expo-router)
-│   ├── (auth)/            # Telas de autenticação
+│   ├── (auth)/            # Telas de autenticação (login, cadastro)
 │   └── (tabs)/            # Telas principais com navegação
+│       ├── index.tsx      # Home - todas as notícias
+│       ├── assinaturas/   # Notícias filtradas por preferências
+│       ├── configuracoes/ # Configurações e preferências do usuário
+│       └── noticia/[id]   # Visualização detalhada de notícias
 ├── components/            # Componentes reutilizáveis
-├── hooks/                 # Custom hooks (useAuth, useNews)
-├── services/              # Serviços de API (auth, news)
+│   ├── NewsCard.tsx       # Card de notícia
+│   └── ui/                # Componentes de interface (Button, TextInput)
+├── hooks/                 # Custom hooks
+│   ├── useAuth.ts         # Gerenciamento de autenticação
+│   └── useNews.ts         # Gerenciamento de notícias e cache
+├── services/              # Serviços de API
+│   ├── auth.ts            # Serviço de autenticação
+│   ├── news.ts            # Serviço de notícias (NewsAPI)
+│   ├── cache.ts           # Gerenciamento de cache
+│   └── preferences.ts     # Gerenciamento de preferências
 ├── types/                 # Definições de tipos TypeScript
-└── utils/                 # Utilitários e dados mockados
+│   ├── login/             # Tipos de autenticação
+│   └── news/              # Tipos de notícias
+└── utils/                 # Utilitários
+    ├── formats.ts         # Formatação de dados
+    ├── mockData.ts        # Dados mockados para fallback
+    └── news.ts            # Utilitários de notícias
 ```
 
 ## API de Notícias
@@ -80,16 +92,41 @@ O app possui dados mockados como fallback caso:
 - O limite de requisições seja atingido
 - Ocorra erro de conexão
 
-## Learn more
+## Tecnologias Utilizadas
 
-To learn more about developing your project with Expo, look at the following resources:
+- **React Native** com **Expo** - Framework principal
+- **TypeScript** - Tipagem estática
+- **Expo Router** - Navegação baseada em arquivos
+- **NativeWind** - Estilização com Tailwind CSS
+- **AsyncStorage** - Armazenamento local
+- **Axios** - Requisições HTTP
+- **JSON Server** - Mock de API para desenvolvimento
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Principais Funcionalidades Implementadas
 
-## Join the community
+### 🔐 Autenticação
 
-Join our community of developers creating universal apps.
+- Login e cadastro de usuários
+- Validação de formulários
+- Gerenciamento de sessão com AsyncStorage
+- Redirecionamento automático baseado no status de autenticação
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 📰 Sistema de Notícias
+
+- Busca de notícias em tempo real via NewsAPI
+- Cache inteligente para melhor performance
+- Sistema de fallback com dados mockados
+- Categorização automática de notícias
+
+### ⚙️ Preferências Personalizáveis
+
+- Seleção de categorias de interesse
+- Filtros personalizados na tela de assinaturas
+- Persistência das preferências do usuário
+
+### 📱 Interface e Navegação
+
+- Navegação por abas (Home, Assinaturas, Configurações)
+- Pull-to-refresh em todas as telas de notícias
+- Visualização detalhada de notícias
+- Design responsivo e moderno
