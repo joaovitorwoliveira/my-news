@@ -37,3 +37,25 @@ export type NewsAPIError = {
   code: string;
   message: string;
 };
+
+export interface TopHeadlinesParams {
+  country?: string;
+  category?: string;
+  sources?: string;
+  q?: string;
+  pageSize?: number;
+  page?: number;
+}
+
+export interface EverythingParams {
+  q: string;
+  searchIn?: "title" | "description" | "content";
+  sources?: string;
+  domains?: string;
+  from?: string;
+  to?: string;
+  language?: string;
+  sortBy?: "relevancy" | "popularity" | "publishedAt";
+  pageSize?: number;
+  page?: number;
+}

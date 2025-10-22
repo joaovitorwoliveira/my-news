@@ -1,12 +1,13 @@
+import { useCallback, useEffect, useState } from "react";
+
+import { NewsCache } from "@/services/cache";
+import { getLatestNews, getTopHeadlines, searchNews } from "@/services/news";
+
 import {
   EverythingParams,
-  getLatestNews,
-  getTopHeadlines,
-  searchNews,
+  NewsItem,
   TopHeadlinesParams,
-} from "@/services/news";
-import { NewsItem } from "@/types/news/types";
-import { useCallback, useEffect, useState } from "react";
+} from "@/types/news/types";
 
 export interface UseNewsReturn {
   news: NewsItem[];
@@ -15,6 +16,7 @@ export interface UseNewsReturn {
   refresh: () => Promise<void>;
   searchByKeyword: (keyword: string) => Promise<void>;
   filterByCategory: (category: string) => Promise<void>;
+  clearCache: () => Promise<void>;
 }
 
 export function useNews(): UseNewsReturn {
@@ -32,7 +34,6 @@ export function useNews(): UseNewsReturn {
       const errorMessage =
         err instanceof Error ? err.message : "Erro ao carregar notícias";
       setError(errorMessage);
-      console.error("Erro ao buscar notícias:", err);
     } finally {
       setLoading(false);
     }
@@ -89,6 +90,15 @@ export function useNews(): UseNewsReturn {
     }
   }, []);
 
+  const clearCache = useCallback(async () => {
+    try {
+      await NewsCache.clearCache();
+      console.log("🗑️ Cache limpo com sucesso");
+    } catch (error) {
+      console.error("Erro ao limpar cache:", error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchNews();
   }, [fetchNews]);
@@ -100,5 +110,6 @@ export function useNews(): UseNewsReturn {
     refresh,
     searchByKeyword,
     filterByCategory,
+    clearCache,
   };
 }

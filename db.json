@@ -7,7 +7,7 @@
       "password": "Senha123!",
       "preferences": {
         "categories": [
-          "Tecnologia"
+          "Política"
         ]
       }
     },
@@ -26,7 +26,10 @@
       "email": "joaoteste@email.com",
       "password": "Senha123!",
       "preferences": {
-        "categories": []
+        "categories": [
+          "Mercado",
+          "Política"
+        ]
       }
     },
     {

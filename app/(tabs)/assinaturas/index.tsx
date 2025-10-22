@@ -1,9 +1,6 @@
-import { NewsCard } from "@/components/NewsCard";
-import { useAuth } from "@/hooks/useAuth";
-import { useNews } from "@/hooks/useNews";
-import { mockNews } from "@/utils/mockData";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useMemo } from "react";
+import { router } from "expo-router";
+import React, { useCallback, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,17 +11,38 @@ import {
   View,
 } from "react-native";
 
+import { NewsCard } from "@/components/NewsCard";
+import { useAuth } from "@/hooks/useAuth";
+import { useNews } from "@/hooks/useNews";
+import { mockNews } from "@/utils/mockData";
+
 export default function AssinaturasScreen() {
   const { user, refreshUserData } = useAuth();
   const { news, loading, error, refresh } = useNews();
+  const hasRefreshedRef = useRef(false);
+  const lastRefreshTimeRef = useRef(0);
 
   const displayNews = error ? mockNews : news;
 
   useFocusEffect(
     useCallback(() => {
-      refresh();
-      refreshUserData();
-    }, [refresh, refreshUserData])
+      const now = Date.now();
+      const timeSinceLastRefresh = now - lastRefreshTimeRef.current;
+      const REFRESH_COOLDOWN = 30000; // 30 segundos
+
+      if (
+        (!hasRefreshedRef.current || timeSinceLastRefresh > REFRESH_COOLDOWN) &&
+        !loading
+      ) {
+        console.log("🔄 Fazendo refresh na tela de assinaturas");
+        refresh();
+        refreshUserData();
+        hasRefreshedRef.current = true;
+        lastRefreshTimeRef.current = now;
+      } else {
+        console.log("⏭️ Pulando refresh - muito recente ou já carregando");
+      }
+    }, [refresh, refreshUserData, loading])
   );
 
   const filteredNews = useMemo(() => {
@@ -42,6 +60,13 @@ export default function AssinaturasScreen() {
 
   const hasPreferences =
     user?.preferences?.categories && user.preferences.categories.length > 0;
+
+  const handleManualRefresh = useCallback(() => {
+    console.log("🔄 Refresh manual iniciado");
+    hasRefreshedRef.current = false;
+    lastRefreshTimeRef.current = 0;
+    refresh();
+  }, [refresh]);
 
   return (
     <View style={styles.container}>
@@ -64,7 +89,10 @@ export default function AssinaturasScreen() {
               Para ver notícias personalizadas aqui, vá em Configurações →
               Preferências e selecione as categorias que você deseja acompanhar.
             </Text>
-            <TouchableOpacity style={styles.configButton}>
+            <TouchableOpacity
+              style={styles.configButton}
+              onPress={() => router.push("/(tabs)/configuracoes")}
+            >
               <Text style={styles.configButtonText}>Ir para Configurações</Text>
             </TouchableOpacity>
           </View>
@@ -75,7 +103,10 @@ export default function AssinaturasScreen() {
             contentContainerStyle={styles.feedContent}
             showsVerticalScrollIndicator={false}
             refreshControl={
-              <RefreshControl refreshing={loading} onRefresh={refresh} />
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={handleManualRefresh}
+              />
             }
             ListEmptyComponent={() => (
               <View style={styles.emptyContainer}>

@@ -1,6 +1,6 @@
-import { useAuth } from "@/hooks/useAuth";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
+
 import {
   ActivityIndicator,
   Alert,
@@ -10,6 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { useAuth } from "@/hooks/useAuth";
+import { useNews } from "@/hooks/useNews";
 
 const AVAILABLE_CATEGORIES = [
   "Mercado",
@@ -22,9 +25,11 @@ const AVAILABLE_CATEGORIES = [
 
 export default function ConfiguracoesScreen() {
   const { user, logout, updateUserPreferences } = useAuth();
+  const { clearCache } = useNews();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
+  const [isClearingCache, setIsClearingCache] = useState(false);
 
   useEffect(() => {
     if (user?.preferences?.categories) {
@@ -71,6 +76,37 @@ export default function ConfiguracoesScreen() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleClearCache = async () => {
+    Alert.alert(
+      "Limpar Cache",
+      "Isso irá limpar todas as notícias em cache. Você precisará de conexão com a internet para carregar novas notícias. Deseja continuar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Limpar",
+          style: "destructive",
+          onPress: async () => {
+            setIsClearingCache(true);
+            try {
+              await clearCache();
+              Alert.alert(
+                "Sucesso!",
+                "Cache limpo com sucesso. As próximas notícias serão carregadas da internet.",
+                [{ text: "OK" }]
+              );
+            } catch (error) {
+              Alert.alert("Erro", "Erro ao limpar cache. Tente novamente.", [
+                { text: "OK" },
+              ]);
+            } finally {
+              setIsClearingCache(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleLogout = async () => {
@@ -193,6 +229,30 @@ export default function ConfiguracoesScreen() {
             </TouchableOpacity>
           </View>
         )}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Cache e Dados</Text>
+        <View style={styles.card}>
+          <Text style={styles.cacheDescription}>
+            O cache armazena notícias temporariamente para reduzir o uso de
+            dados e melhorar a velocidade de carregamento.
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.cacheButton,
+              isClearingCache && styles.cacheButtonDisabled,
+            ]}
+            onPress={handleClearCache}
+            disabled={isClearingCache}
+          >
+            {isClearingCache ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text style={styles.cacheButtonText}>Limpar Cache</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -388,6 +448,29 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     fontWeight: "700",
+    color: "white",
+  },
+  cacheDescription: {
+    fontSize: 14,
+    color: "#6b7280",
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  cacheButton: {
+    backgroundColor: "#f59e0b",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 48,
+  },
+  cacheButtonDisabled: {
+    backgroundColor: "#9ca3af",
+  },
+  cacheButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
     color: "white",
   },
 });

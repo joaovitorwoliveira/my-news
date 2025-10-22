@@ -1,8 +1,5 @@
-import { NewsCard } from "@/components/NewsCard";
-import { useAuth } from "@/hooks/useAuth";
-import { useNews } from "@/hooks/useNews";
-import { mockNews } from "@/utils/mockData";
 import React from "react";
+
 import {
   ActivityIndicator,
   FlatList,
@@ -11,6 +8,11 @@ import {
   Text,
   View,
 } from "react-native";
+
+import { NewsCard } from "@/components/NewsCard";
+import { useAuth } from "@/hooks/useAuth";
+import { useNews } from "@/hooks/useNews";
+import { mockNews } from "@/utils/mockData";
 
 export default function HomeScreen() {
   const { user } = useAuth();

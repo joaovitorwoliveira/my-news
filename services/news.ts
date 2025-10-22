@@ -1,119 +1,43 @@
-import { NewsAPIArticle, NewsAPIResponse, NewsItem } from "@/types/news/types";
 import axios from "axios";
+import { NewsCache } from "./cache";
 
-const NEWS_API_BASE_URL = "https://newsapi.org/v2";
-const NEWS_API_KEY =
-  process.env.EXPO_PUBLIC_NEWS_API_KEY || process.env.NEWS_API_KEY;
+import {
+  EverythingParams,
+  NewsAPIResponse,
+  NewsItem,
+  TopHeadlinesParams,
+} from "@/types/news/types";
+import { convertArticleToNewsItem } from "@/utils/news";
 
-function formatPublishedDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInMs = now.getTime() - date.getTime();
-  const diffInMinutes = Math.floor(diffInMs / 60000);
-  const diffInHours = Math.floor(diffInMs / 3600000);
-  const diffInDays = Math.floor(diffInMs / 86400000);
+const NEWS_API_BASE_URL = process.env.EXPO_PUBLIC_NEWS_API_BASE_URL;
+const NEWS_API_KEY = process.env.EXPO_PUBLIC_NEWS_API_KEY;
 
-  if (diffInMinutes < 60) {
-    return `Há ${diffInMinutes} ${diffInMinutes === 1 ? "minuto" : "minutos"}`;
-  } else if (diffInHours < 24) {
-    return `Há ${diffInHours} ${diffInHours === 1 ? "hora" : "horas"}`;
-  } else if (diffInDays === 1) {
-    return "Ontem";
-  } else {
-    return `Há ${diffInDays} dias`;
+function handleNewsAPIError(error: any): never {
+  if (error?.response?.data?.code === "rateLimited") {
+    throw new Error(
+      "Limite de requisições atingido. A conta gratuita da NewsAPI permite 100 requisições por 24h. Tente novamente mais tarde ou considere fazer upgrade para um plano pago."
+    );
   }
-}
 
-function categorizeArticle(article: NewsAPIArticle): string {
-  const title = article.title?.toLowerCase() || "";
-  const description = article.description?.toLowerCase() || "";
-  const source = article.source.name?.toLowerCase() || "";
-
-  // Categorização simples baseada em palavras-chave
-  if (
-    title.includes("mercado") ||
-    title.includes("ações") ||
-    title.includes("bolsa") ||
-    source.includes("bloomberg") ||
-    source.includes("forbes")
-  ) {
-    return "Mercado";
-  } else if (
-    title.includes("tecnologia") ||
-    title.includes("tech") ||
-    title.includes("startup") ||
-    title.includes("ia") ||
-    title.includes("inteligência artificial") ||
-    source.includes("techcrunch") ||
-    source.includes("wired")
-  ) {
-    return "Tecnologia";
-  } else if (
-    title.includes("governo") ||
-    title.includes("política") ||
-    title.includes("eleição") ||
-    description.includes("político")
-  ) {
-    return "Política";
-  } else if (
-    title.includes("sustentável") ||
-    title.includes("energia") ||
-    title.includes("inovação") ||
-    title.includes("startup")
-  ) {
-    return "Inovação";
-  } else if (
-    title.includes("consumidor") ||
-    title.includes("consumo") ||
-    title.includes("marca")
-  ) {
-    return "Consumo";
-  } else {
-    return "Geral";
+  if (axios.isAxiosError(error)) {
+    console.error("Erro ao buscar notícias:", error.response?.data);
   }
-}
 
-function convertArticleToNewsItem(article: NewsAPIArticle): NewsItem {
-  return {
-    id: article.url,
-    title: article.title,
-    summary: article.description || article.content?.substring(0, 200) || "",
-    category: categorizeArticle(article),
-    publishedAt: formatPublishedDate(article.publishedAt),
-    source: article.source.name,
-    author: article.author || undefined,
-    url: article.url,
-    imageUrl: article.urlToImage || undefined,
-  };
-}
-
-export interface TopHeadlinesParams {
-  country?: string;
-  category?: string;
-  sources?: string;
-  q?: string;
-  pageSize?: number;
-  page?: number;
-}
-
-export interface EverythingParams {
-  q: string;
-  searchIn?: "title" | "description" | "content";
-  sources?: string;
-  domains?: string;
-  from?: string;
-  to?: string;
-  language?: string;
-  sortBy?: "relevancy" | "popularity" | "publishedAt";
-  pageSize?: number;
-  page?: number;
+  throw error;
 }
 
 export async function getTopHeadlines(
   params: TopHeadlinesParams = {}
 ): Promise<NewsItem[]> {
   try {
+    const cachedNews = await NewsCache.getTopHeadlines(params);
+    if (cachedNews) {
+      console.log("📦 Retornando notícias do cache");
+      return cachedNews;
+    }
+
     if (!NEWS_API_KEY) {
+      console.error("❌ NEWS_API_KEY não encontrada!");
       throw new Error(
         "NEWS_API_KEY não encontrada. Configure a variável de ambiente."
       );
@@ -125,6 +49,7 @@ export async function getTopHeadlines(
       ...params,
     };
 
+    console.log("🌐 Fazendo requisição para NewsAPI...");
     const response = await axios.get<NewsAPIResponse>(
       `${NEWS_API_BASE_URL}/top-headlines`,
       {
@@ -136,17 +61,19 @@ export async function getTopHeadlines(
     );
 
     if (response.data.status === "ok") {
-      return response.data.articles
+      const news = response.data.articles
         .filter((article) => article.title && article.description)
         .map(convertArticleToNewsItem);
+
+      await NewsCache.setTopHeadlines(news, params);
+      console.log("💾 Notícias salvas no cache");
+
+      return news;
     }
 
     return [];
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Erro ao buscar notícias:", error.response?.data);
-    }
-    throw error;
+    handleNewsAPIError(error);
   }
 }
 
@@ -154,6 +81,12 @@ export async function searchNews(
   params: EverythingParams
 ): Promise<NewsItem[]> {
   try {
+    const cachedNews = await NewsCache.getSearchResults(params.q);
+    if (cachedNews) {
+      console.log("📦 Retornando resultados de busca do cache");
+      return cachedNews;
+    }
+
     if (!NEWS_API_KEY) {
       throw new Error(
         "NEWS_API_KEY não encontrada. Configure a variável de ambiente."
@@ -167,6 +100,7 @@ export async function searchNews(
       ...params,
     };
 
+    console.log("🔍 Fazendo busca na NewsAPI...");
     const response = await axios.get<NewsAPIResponse>(
       `${NEWS_API_BASE_URL}/everything`,
       {
@@ -178,28 +112,37 @@ export async function searchNews(
     );
 
     if (response.data.status === "ok") {
-      return response.data.articles
+      const news = response.data.articles
         .filter((article) => article.title && article.description)
         .map(convertArticleToNewsItem);
+
+      await NewsCache.setSearchResults(news, params.q);
+      console.log("💾 Resultados de busca salvos no cache");
+
+      return news;
     }
 
     return [];
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Erro ao buscar notícias:", error.response?.data);
-    }
-    throw error;
+    handleNewsAPIError(error);
   }
 }
 
 export async function getLatestNews(): Promise<NewsItem[]> {
   try {
+    const cachedNews = await NewsCache.getLatestNews();
+    if (cachedNews) {
+      console.log("📦 Retornando últimas notícias do cache");
+      return cachedNews;
+    }
+
     const headlines = await getTopHeadlines({
       country: "br",
       pageSize: 20,
     });
-
     if (headlines.length > 0) {
+      await NewsCache.setLatestNews(headlines);
+      console.log("💾 Últimas notícias salvas no cache");
       return headlines;
     }
 
