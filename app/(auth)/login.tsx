@@ -44,12 +44,7 @@ export default function LoginScreen() {
     <View className="flex-1 justify-center px-5 bg-gray-100">
       <Image
         source={require("@/assets/images/logo-img.png")}
-        style={{
-          alignSelf: "center",
-          marginBottom: 20,
-          width: 100,
-          height: 100,
-        }}
+        className="self-center mb-5 w-24 h-24"
       />
       <Text className="text-3xl font-bold mb-8 text-center text-gray-800">
         Login
@@ -72,12 +67,13 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        <Button
-          title={isLoading ? "Entrando..." : "Entrar"}
-          onPress={handleLogin}
-          disabled={isLoading}
-          style={{ marginBottom: 16 }}
-        />
+        <View className="mb-4">
+          <Button
+            title={isLoading ? "Entrando..." : "Entrar"}
+            onPress={handleLogin}
+            disabled={isLoading}
+          />
+        </View>
 
         <Button
           title="Não tem conta? Cadastre-se"

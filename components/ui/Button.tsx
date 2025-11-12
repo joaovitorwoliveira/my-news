@@ -11,7 +11,6 @@ export function Button({
   title,
   variant = "primary",
   size = "medium",
-  style,
   disabled,
   ...props
 }: ButtonProps) {
@@ -59,7 +58,6 @@ export function Button({
     <TouchableOpacity
       className={getButtonClasses()}
       disabled={disabled}
-      style={style}
       {...props}
     >
       <Text className={getTextClasses()}>{title}</Text>

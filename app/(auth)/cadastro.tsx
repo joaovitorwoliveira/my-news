@@ -117,21 +117,12 @@ export default function SignUpScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        padding: 20,
-      }}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 20 }}
       className="bg-gray-100"
     >
       <Image
         source={require("@/assets/images/logo-img.png")}
-        style={{
-          alignSelf: "center",
-          marginBottom: 20,
-          width: 100,
-          height: 100,
-        }}
+        className="self-center mb-5 w-24 h-24"
       />
       <Text className="text-3xl font-bold mb-8 text-center text-gray-800">
         Cadastro
@@ -174,12 +165,13 @@ export default function SignUpScreen() {
           error={errors.confirmPassword}
         />
 
-        <Button
-          title={isLoading ? "Cadastrando..." : "Cadastrar"}
-          onPress={handleSignUp}
-          disabled={isLoading}
-          style={{ marginBottom: 16 }}
-        />
+        <View className="mb-4">
+          <Button
+            title={isLoading ? "Cadastrando..." : "Cadastrar"}
+            onPress={handleSignUp}
+            disabled={isLoading}
+          />
+        </View>
 
         <Button
           title="Já tem conta? Faça login"

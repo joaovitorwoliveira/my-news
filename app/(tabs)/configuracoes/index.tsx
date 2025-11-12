@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   Alert,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -133,59 +132,71 @@ export default function ConfiguracoesScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Configurações</Text>
-        <Text style={styles.subtitle}>Gerencie sua conta e preferências</Text>
+    <ScrollView className="flex-1 bg-gray-100">
+      <View className="p-5 pt-16 bg-white border-b border-gray-200">
+        <Text className="text-2xl font-bold text-gray-900 mb-1">
+          Configurações
+        </Text>
+        <Text className="text-sm text-gray-500">
+          Gerencie sua conta e preferências
+        </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Conta</Text>
-        <View style={styles.card}>
-          <View style={styles.userInfo}>
-            <Text style={styles.userLabel}>Usuário conectado:</Text>
-            <Text style={styles.userName}>{user?.name || user?.email}</Text>
+      <View className="mt-5 px-5">
+        <Text className="text-base font-semibold text-gray-700 mb-3">
+          Conta
+        </Text>
+        <View className="bg-white rounded-xl p-4 shadow-sm">
+          <View className="gap-1">
+            <Text className="text-xs text-gray-500 uppercase font-semibold">
+              Usuário conectado:
+            </Text>
+            <Text className="text-base text-gray-900 font-medium">
+              {user?.name || user?.email}
+            </Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Preferências</Text>
+      <View className="mt-5 px-5">
+        <Text className="text-base font-semibold text-gray-700 mb-3">
+          Preferências
+        </Text>
         <TouchableOpacity
-          style={styles.preferencesButton}
+          className="bg-white rounded-xl p-4 flex-row justify-between items-center shadow-sm"
           onPress={() => setShowPreferences(!showPreferences)}
         >
-          <Text style={styles.preferencesButtonText}>
+          <Text className="text-base font-semibold text-gray-700">
             {showPreferences ? "Ocultar" : "Gerenciar"} Categorias de Notícias
           </Text>
-          <Text style={styles.preferencesButtonIcon}>
+          <Text className="text-base text-gray-500">
             {showPreferences ? "▲" : "▼"}
           </Text>
         </TouchableOpacity>
 
         {showPreferences && (
-          <View style={styles.preferencesContainer}>
-            <Text style={styles.preferencesSubtitle}>
+          <View className="mt-4 bg-white rounded-xl p-5 shadow-sm">
+            <Text className="text-sm text-gray-500 mb-5 leading-5">
               Selecione as categorias de notícias que você deseja acompanhar
             </Text>
 
-            <View style={styles.categoriesGrid}>
+            <View className="flex-row flex-wrap gap-3 mb-6">
               {AVAILABLE_CATEGORIES.map((category) => {
                 const isSelected = selectedCategories.includes(category);
                 return (
                   <TouchableOpacity
                     key={category}
-                    style={[
-                      styles.categoryChip,
-                      isSelected && styles.categoryChipSelected,
-                    ]}
+                    className={`px-4 py-3 rounded-full border-2 ${
+                      isSelected
+                        ? "bg-blue-600 border-blue-600"
+                        : "bg-gray-100 border-gray-200"
+                    }`}
                     onPress={() => toggleCategory(category)}
                   >
                     <Text
-                      style={[
-                        styles.categoryChipText,
-                        isSelected && styles.categoryChipTextSelected,
-                      ]}
+                      className={`text-sm font-semibold ${
+                        isSelected ? "text-white" : "text-gray-700"
+                      }`}
                     >
                       {category}
                     </Text>
@@ -194,283 +205,89 @@ export default function ConfiguracoesScreen() {
               })}
             </View>
 
-            <View style={styles.selectedContainer}>
-              <Text style={styles.selectedTitle}>
+            <View className="mb-6">
+              <Text className="text-base font-semibold text-gray-700 mb-3">
                 Categorias Selecionadas ({selectedCategories.length})
               </Text>
               {selectedCategories.length > 0 ? (
-                <View style={styles.selectedGrid}>
+                <View className="flex-row flex-wrap gap-2">
                   {selectedCategories.map((category) => (
-                    <View key={category} style={styles.selectedChip}>
-                      <Text style={styles.selectedChipText}>{category}</Text>
+                    <View
+                      key={category}
+                      className="bg-blue-100 px-3 py-2 rounded-2xl"
+                    >
+                      <Text className="text-xs font-semibold text-blue-800">
+                        {category}
+                      </Text>
                     </View>
                   ))}
                 </View>
               ) : (
-                <Text style={styles.emptyText}>
+                <Text className="text-sm text-gray-400 italic">
                   Nenhuma categoria selecionada
                 </Text>
               )}
             </View>
 
             <TouchableOpacity
-              style={[
-                styles.saveButton,
-                isLoading && styles.saveButtonDisabled,
-              ]}
+              className={`py-4 px-6 rounded-xl items-center justify-center ${
+                isLoading ? "bg-gray-400" : "bg-blue-600"
+              }`}
               onPress={handleSavePreferences}
               disabled={isLoading}
             >
               {isLoading ? (
                 <ActivityIndicator color="white" size="small" />
               ) : (
-                <Text style={styles.saveButtonText}>Salvar Preferências</Text>
+                <Text className="text-base font-bold text-white">
+                  Salvar Preferências
+                </Text>
               )}
             </TouchableOpacity>
           </View>
         )}
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Cache e Dados</Text>
-        <View style={styles.card}>
-          <Text style={styles.cacheDescription}>
+      <View className="mt-5 px-5">
+        <Text className="text-base font-semibold text-gray-700 mb-3">
+          Cache e Dados
+        </Text>
+        <View className="bg-white rounded-xl p-4 shadow-sm">
+          <Text className="text-sm text-gray-500 leading-5 mb-4">
             O cache armazena notícias temporariamente para reduzir o uso de
             dados e melhorar a velocidade de carregamento.
           </Text>
           <TouchableOpacity
-            style={[
-              styles.cacheButton,
-              isClearingCache && styles.cacheButtonDisabled,
-            ]}
+            className={`py-3 px-5 rounded-lg items-center justify-center ${
+              isClearingCache ? "bg-gray-400" : "bg-amber-500"
+            }`}
             onPress={handleClearCache}
             disabled={isClearingCache}
           >
             {isClearingCache ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text style={styles.cacheButtonText}>Limpar Cache</Text>
+              <Text className="text-sm font-semibold text-white">
+                Limpar Cache
+              </Text>
             )}
           </TouchableOpacity>
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Ações</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Sair da Conta</Text>
+      <View className="mt-5 px-5 mb-5">
+        <Text className="text-base font-semibold text-gray-700 mb-3">
+          Ações
+        </Text>
+        <TouchableOpacity
+          className="bg-red-500 py-4 px-6 rounded-xl items-center shadow-lg"
+          onPress={handleLogout}
+        >
+          <Text className="text-white font-semibold text-base">
+            Sair da Conta
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  header: {
-    padding: 20,
-    paddingTop: 60,
-    backgroundColor: "white",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#6b7280",
-  },
-  section: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#374151",
-    marginBottom: 12,
-  },
-  card: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  userInfo: {
-    gap: 4,
-  },
-  userLabel: {
-    fontSize: 12,
-    color: "#6b7280",
-    textTransform: "uppercase",
-    fontWeight: "600",
-  },
-  userName: {
-    fontSize: 16,
-    color: "#111827",
-    fontWeight: "500",
-  },
-  logoutButton: {
-    backgroundColor: "#ef4444",
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    alignItems: "center",
-    shadowColor: "#ef4444",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  logoutText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  preferencesButton: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  preferencesButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#374151",
-  },
-  preferencesButtonIcon: {
-    fontSize: 16,
-    color: "#6b7280",
-  },
-  preferencesContainer: {
-    marginTop: 16,
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 20,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  preferencesSubtitle: {
-    fontSize: 14,
-    color: "#6b7280",
-    marginBottom: 20,
-    lineHeight: 20,
-  },
-  categoriesGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-    marginBottom: 24,
-  },
-  categoryChip: {
-    backgroundColor: "#f3f4f6",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: "#e5e7eb",
-  },
-  categoryChipSelected: {
-    backgroundColor: "#2563eb",
-    borderColor: "#2563eb",
-  },
-  categoryChipText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
-  },
-  categoryChipTextSelected: {
-    color: "white",
-  },
-  selectedContainer: {
-    marginBottom: 24,
-  },
-  selectedTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#374151",
-    marginBottom: 12,
-  },
-  selectedGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  selectedChip: {
-    backgroundColor: "#dbeafe",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
-  },
-  selectedChipText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#1e40af",
-  },
-  emptyText: {
-    fontSize: 14,
-    color: "#9ca3af",
-    fontStyle: "italic",
-  },
-  saveButton: {
-    backgroundColor: "#2563eb",
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 56,
-  },
-  saveButtonDisabled: {
-    backgroundColor: "#9ca3af",
-  },
-  saveButtonText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "white",
-  },
-  cacheDescription: {
-    fontSize: 14,
-    color: "#6b7280",
-    lineHeight: 20,
-    marginBottom: 16,
-  },
-  cacheButton: {
-    backgroundColor: "#f59e0b",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 48,
-  },
-  cacheButtonDisabled: {
-    backgroundColor: "#9ca3af",
-  },
-  cacheButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "white",
-  },
-});

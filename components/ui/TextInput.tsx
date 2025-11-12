@@ -14,7 +14,6 @@ interface CustomTextInputProps extends TextInputProps {
 export function TextInput({
   label,
   error,
-  style,
   ...props
 }: CustomTextInputProps) {
   return (
@@ -29,7 +28,6 @@ export function TextInput({
           error ? "border-red-400" : ""
         }`}
         placeholderTextColor="#999"
-        style={style}
         {...props}
       />
       {error && <Text className="text-red-400 text-sm mt-1">{error}</Text>}

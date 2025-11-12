@@ -4,7 +4,6 @@ import {
   Image,
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -41,148 +40,49 @@ export default function NoticiaDetalhe() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView className="flex-1 bg-gray-100">
+      <View className="p-4 pt-16 bg-white">
         <TouchableOpacity
           onPress={() => router.back()}
-          style={styles.backButton}
+          className="flex-row items-center"
         >
-          <Text style={styles.backButtonText}>← Voltar</Text>
+          <Text className="text-base text-blue-600 font-semibold">← Voltar</Text>
         </TouchableOpacity>
       </View>
 
       {imageUrl && (
         <Image
           source={{ uri: imageUrl }}
-          style={styles.image}
+          className="w-full h-64 bg-gray-200"
           resizeMode="cover"
         />
       )}
 
-      <View style={styles.content}>
-        <View style={styles.metadata}>
-          <Text style={styles.category}>{category}</Text>
-          <Text style={styles.publishedAt}>{publishedAt}</Text>
+      <View className="p-5 bg-white">
+        <View className="flex-row justify-between items-center mb-3">
+          <Text className="text-xs font-bold text-blue-600 uppercase tracking-wide">{category}</Text>
+          <Text className="text-xs text-gray-400">{publishedAt}</Text>
         </View>
 
-        <Text style={styles.title}>{title}</Text>
+        <Text className="text-2xl font-bold text-gray-900 leading-8 mb-4">{title}</Text>
 
-        <View style={styles.sourceContainer}>
-          {source && <Text style={styles.source}>📰 {source}</Text>}
-          {author && <Text style={styles.author}>✍️ {author}</Text>}
+        <View className="flex-row flex-wrap gap-3 mb-5 pb-5 border-b border-gray-200">
+          {source && <Text className="text-sm text-gray-600 font-semibold">📰 {source}</Text>}
+          {author && <Text className="text-sm text-gray-500">✍️ {author}</Text>}
         </View>
 
-        <Text style={styles.summary}>{summary}</Text>
+        <Text className="text-base text-gray-700 leading-7 mb-6">{summary}</Text>
 
         {url && (
           <TouchableOpacity
-            style={styles.readMoreButton}
+            className="flex-row items-center justify-center bg-blue-600 py-4 px-6 rounded-xl mt-2"
             onPress={handleOpenOriginal}
           >
-            <Text style={styles.readMoreText}>Ler matéria completa</Text>
-            <Text style={styles.readMoreIcon}>→</Text>
+            <Text className="text-base font-bold text-white mr-2">Ler matéria completa</Text>
+            <Text className="text-lg text-white font-bold">→</Text>
           </TouchableOpacity>
         )}
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  header: {
-    padding: 16,
-    paddingTop: 60,
-    backgroundColor: "white",
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: "#2563eb",
-    fontWeight: "600",
-  },
-  image: {
-    width: "100%",
-    height: 250,
-    backgroundColor: "#e5e7eb",
-  },
-  content: {
-    padding: 20,
-    backgroundColor: "white",
-  },
-  metadata: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  category: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#2563eb",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  publishedAt: {
-    fontSize: 12,
-    color: "#9ca3af",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
-    lineHeight: 32,
-    marginBottom: 16,
-  },
-  sourceContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-    marginBottom: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-  },
-  source: {
-    fontSize: 14,
-    color: "#4b5563",
-    fontWeight: "600",
-  },
-  author: {
-    fontSize: 14,
-    color: "#6b7280",
-  },
-  summary: {
-    fontSize: 16,
-    color: "#374151",
-    lineHeight: 26,
-    marginBottom: 24,
-  },
-  readMoreButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#2563eb",
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-  readMoreText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "white",
-    marginRight: 8,
-  },
-  readMoreIcon: {
-    fontSize: 18,
-    color: "white",
-    fontWeight: "700",
-  },
-});

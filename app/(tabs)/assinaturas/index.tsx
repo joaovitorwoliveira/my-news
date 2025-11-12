@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   RefreshControl,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -69,11 +68,11 @@ export default function AssinaturasScreen() {
   }, [refresh]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Suas Assinaturas</Text>
-          <Text style={styles.subtitle}>
+    <View className="flex-1 bg-gray-100">
+      <View className="flex-1 p-5">
+        <View className="mb-6">
+          <Text className="text-3xl font-bold text-gray-800 mb-2">Suas Assinaturas</Text>
+          <Text className="text-base text-gray-500 leading-6">
             {hasPreferences
               ? `Notícias das suas categorias favoritas (${user?.preferences?.categories?.length} categorias)`
               : "Configure suas preferências para ver notícias personalizadas"}
@@ -81,26 +80,26 @@ export default function AssinaturasScreen() {
         </View>
 
         {!hasPreferences ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>
+          <View className="flex-1 items-center justify-center py-16 px-5">
+            <Text className="text-xl font-bold text-gray-700 mb-3 text-center">
               Configure suas preferências de categorias
             </Text>
-            <Text style={styles.emptyText}>
+            <Text className="text-base text-gray-500 text-center leading-6 mb-6">
               Para ver notícias personalizadas aqui, vá em Configurações →
               Preferências e selecione as categorias que você deseja acompanhar.
             </Text>
             <TouchableOpacity
-              style={styles.configButton}
+              className="bg-blue-600 py-3 px-6 rounded-lg"
               onPress={() => router.push("/(tabs)/configuracoes")}
             >
-              <Text style={styles.configButtonText}>Ir para Configurações</Text>
+              <Text className="text-base font-semibold text-white">Ir para Configurações</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <FlatList
             data={filteredNews}
             keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.feedContent}
+            contentContainerStyle={{ paddingBottom: 40 }}
             showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
@@ -109,18 +108,18 @@ export default function AssinaturasScreen() {
               />
             }
             ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
+              <View className="flex-1 items-center justify-center py-16 px-5">
                 {loading ? (
                   <>
                     <ActivityIndicator size="large" color="#2563eb" />
-                    <Text style={styles.emptyText}>Carregando notícias...</Text>
+                    <Text className="text-base text-gray-500 text-center leading-6 mb-6">Carregando notícias...</Text>
                   </>
                 ) : (
                   <>
-                    <Text style={styles.emptyTitle}>
+                    <Text className="text-xl font-bold text-gray-700 mb-3 text-center">
                       Nenhuma notícia encontrada
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text className="text-base text-gray-500 text-center leading-6 mb-6">
                       Não há notícias disponíveis para suas categorias
                       selecionadas no momento.
                     </Text>
@@ -133,9 +132,9 @@ export default function AssinaturasScreen() {
         )}
 
         {error && hasPreferences && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>⚠️ {error}</Text>
-            <Text style={styles.errorSubtext}>
+          <View className="bg-yellow-100 rounded-lg p-3 mt-4 border-l-4 border-yellow-500">
+            <Text className="text-sm font-semibold text-yellow-800 mb-1">⚠️ {error}</Text>
+            <Text className="text-xs text-yellow-900">
               Exibindo notícias de exemplo. Verifique sua conexão ou configure a
               API key.
             </Text>
@@ -145,81 +144,3 @@ export default function AssinaturasScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1f2937",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#6b7280",
-    lineHeight: 24,
-  },
-  feedContent: {
-    paddingBottom: 40,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 60,
-    paddingHorizontal: 20,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#374151",
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#6b7280",
-    textAlign: "center",
-    lineHeight: 24,
-    marginBottom: 24,
-  },
-  configButton: {
-    backgroundColor: "#2563eb",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  configButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "white",
-  },
-  errorContainer: {
-    backgroundColor: "#fef3c7",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: "#f59e0b",
-  },
-  errorText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#92400e",
-    marginBottom: 4,
-  },
-  errorSubtext: {
-    fontSize: 12,
-    color: "#78350f",
-  },
-});
