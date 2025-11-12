@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import {
@@ -40,47 +41,63 @@ export default function NoticiaDetalhe() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-100">
-      <View className="p-4 pt-16 bg-white">
+    <ScrollView className="flex-1 bg-greige">
+      <View className="p-4 pt-16 bg-cream">
         <TouchableOpacity
           onPress={() => router.back()}
           className="flex-row items-center"
         >
-          <Text className="text-base text-blue-600 font-semibold">← Voltar</Text>
+          <Text className="text-base text-slate font-semibold">← Voltar</Text>
         </TouchableOpacity>
       </View>
 
       {imageUrl && (
         <Image
           source={{ uri: imageUrl }}
-          className="w-full h-64 bg-gray-200"
+          className="w-full h-64 bg-mint"
           resizeMode="cover"
         />
       )}
 
-      <View className="p-5 bg-white">
+      <View className="p-5 bg-cream">
         <View className="flex-row justify-between items-center mb-3">
-          <Text className="text-xs font-bold text-blue-600 uppercase tracking-wide">{category}</Text>
-          <Text className="text-xs text-gray-400">{publishedAt}</Text>
+          <Text className="text-xs font-bold text-slate uppercase tracking-wide">
+            {category}
+          </Text>
+          <Text className="text-xs text-charcoal opacity-70">
+            {publishedAt}
+          </Text>
         </View>
 
-        <Text className="text-2xl font-bold text-gray-900 leading-8 mb-4">{title}</Text>
+        <Text className="text-2xl font-bold text-charcoal leading-8 mb-4">
+          {title}
+        </Text>
 
-        <View className="flex-row flex-wrap gap-3 mb-5 pb-5 border-b border-gray-200">
-          {source && <Text className="text-sm text-gray-600 font-semibold">📰 {source}</Text>}
-          {author && <Text className="text-sm text-gray-500">✍️ {author}</Text>}
+        <View className="flex-row flex-wrap gap-3 mb-5 pb-5 border-b border-mint">
+          {source && (
+            <Text className="text-sm text-charcoal opacity-80 font-semibold">
+              📰 {source}
+            </Text>
+          )}
+          {author && (
+            <Text className="text-sm text-charcoal opacity-70">
+              ✍️ {author}
+            </Text>
+          )}
         </View>
 
-        <Text className="text-base text-gray-700 leading-7 mb-6">{summary}</Text>
+        <Text className="text-base text-charcoal opacity-90 leading-7 mb-6">
+          {summary}
+        </Text>
 
         {url && (
-          <TouchableOpacity
-            className="flex-row items-center justify-center bg-blue-600 py-4 px-6 rounded-xl mt-2"
-            onPress={handleOpenOriginal}
-          >
-            <Text className="text-base font-bold text-white mr-2">Ler matéria completa</Text>
-            <Text className="text-lg text-white font-bold">→</Text>
-          </TouchableOpacity>
+          <View className="mt-2">
+            <Button
+              title="Ler matéria completa →"
+              onPress={handleOpenOriginal}
+              variant="primary"
+            />
+          </View>
         )}
       </View>
     </ScrollView>

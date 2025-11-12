@@ -132,26 +132,26 @@ export default function ConfiguracoesScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-100">
-      <View className="p-5 pt-16 bg-white border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900 mb-1">
+    <ScrollView className="flex-1 bg-greige">
+      <View className="p-5 pt-16 bg-cream border-b border-mint">
+        <Text className="text-2xl font-bold text-charcoal mb-1">
           Configurações
         </Text>
-        <Text className="text-sm text-gray-500">
+        <Text className="text-sm text-charcoal opacity-70">
           Gerencie sua conta e preferências
         </Text>
       </View>
 
       <View className="mt-5 px-5">
-        <Text className="text-base font-semibold text-gray-700 mb-3">
+        <Text className="text-base font-semibold text-charcoal mb-3">
           Conta
         </Text>
-        <View className="bg-white rounded-xl p-4 shadow-sm">
+        <View className="bg-cream rounded-xl p-4 shadow-sm border border-greige">
           <View className="gap-1">
-            <Text className="text-xs text-gray-500 uppercase font-semibold">
+            <Text className="text-xs text-charcoal opacity-70 uppercase font-semibold">
               Usuário conectado:
             </Text>
-            <Text className="text-base text-gray-900 font-medium">
+            <Text className="text-base text-charcoal font-medium">
               {user?.name || user?.email}
             </Text>
           </View>
@@ -159,24 +159,24 @@ export default function ConfiguracoesScreen() {
       </View>
 
       <View className="mt-5 px-5">
-        <Text className="text-base font-semibold text-gray-700 mb-3">
+        <Text className="text-base font-semibold text-charcoal mb-3">
           Preferências
         </Text>
         <TouchableOpacity
-          className="bg-white rounded-xl p-4 flex-row justify-between items-center shadow-sm"
+          className="bg-cream rounded-xl p-4 flex-row justify-between items-center shadow-sm border border-greige"
           onPress={() => setShowPreferences(!showPreferences)}
         >
-          <Text className="text-base font-semibold text-gray-700">
+          <Text className="text-base font-semibold text-charcoal">
             {showPreferences ? "Ocultar" : "Gerenciar"} Categorias de Notícias
           </Text>
-          <Text className="text-base text-gray-500">
+          <Text className="text-base text-slate">
             {showPreferences ? "▲" : "▼"}
           </Text>
         </TouchableOpacity>
 
         {showPreferences && (
-          <View className="mt-4 bg-white rounded-xl p-5 shadow-sm">
-            <Text className="text-sm text-gray-500 mb-5 leading-5">
+          <View className="mt-4 bg-cream rounded-xl p-5 shadow-sm border border-greige">
+            <Text className="text-sm text-charcoal opacity-80 mb-5 leading-5">
               Selecione as categorias de notícias que você deseja acompanhar
             </Text>
 
@@ -188,14 +188,14 @@ export default function ConfiguracoesScreen() {
                     key={category}
                     className={`px-4 py-3 rounded-full border-2 ${
                       isSelected
-                        ? "bg-blue-600 border-blue-600"
-                        : "bg-gray-100 border-gray-200"
+                        ? "bg-slate border-slate"
+                        : "bg-greige border-mint"
                     }`}
                     onPress={() => toggleCategory(category)}
                   >
                     <Text
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-white" : "text-gray-700"
+                        isSelected ? "text-white" : "text-charcoal"
                       }`}
                     >
                       {category}
@@ -206,7 +206,7 @@ export default function ConfiguracoesScreen() {
             </View>
 
             <View className="mb-6">
-              <Text className="text-base font-semibold text-gray-700 mb-3">
+              <Text className="text-base font-semibold text-charcoal mb-3">
                 Categorias Selecionadas ({selectedCategories.length})
               </Text>
               {selectedCategories.length > 0 ? (
@@ -214,16 +214,16 @@ export default function ConfiguracoesScreen() {
                   {selectedCategories.map((category) => (
                     <View
                       key={category}
-                      className="bg-blue-100 px-3 py-2 rounded-2xl"
+                      className="bg-mint px-3 py-2 rounded-2xl"
                     >
-                      <Text className="text-xs font-semibold text-blue-800">
+                      <Text className="text-xs font-semibold text-charcoal">
                         {category}
                       </Text>
                     </View>
                   ))}
                 </View>
               ) : (
-                <Text className="text-sm text-gray-400 italic">
+                <Text className="text-sm text-charcoal opacity-60 italic">
                   Nenhuma categoria selecionada
                 </Text>
               )}
@@ -231,7 +231,7 @@ export default function ConfiguracoesScreen() {
 
             <TouchableOpacity
               className={`py-4 px-6 rounded-xl items-center justify-center ${
-                isLoading ? "bg-gray-400" : "bg-blue-600"
+                isLoading ? "bg-mint opacity-60" : "bg-slate"
               }`}
               onPress={handleSavePreferences}
               disabled={isLoading}
@@ -249,17 +249,17 @@ export default function ConfiguracoesScreen() {
       </View>
 
       <View className="mt-5 px-5">
-        <Text className="text-base font-semibold text-gray-700 mb-3">
+        <Text className="text-base font-semibold text-charcoal mb-3">
           Cache e Dados
         </Text>
-        <View className="bg-white rounded-xl p-4 shadow-sm">
-          <Text className="text-sm text-gray-500 leading-5 mb-4">
+        <View className="bg-cream rounded-xl p-4 shadow-sm border border-greige">
+          <Text className="text-sm text-charcoal opacity-80 leading-5 mb-4">
             O cache armazena notícias temporariamente para reduzir o uso de
             dados e melhorar a velocidade de carregamento.
           </Text>
           <TouchableOpacity
             className={`py-3 px-5 rounded-lg items-center justify-center ${
-              isClearingCache ? "bg-gray-400" : "bg-amber-500"
+              isClearingCache ? "bg-mint opacity-60" : "bg-mint"
             }`}
             onPress={handleClearCache}
             disabled={isClearingCache}
@@ -267,7 +267,7 @@ export default function ConfiguracoesScreen() {
             {isClearingCache ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text className="text-sm font-semibold text-white">
+              <Text className="text-sm font-semibold text-charcoal">
                 Limpar Cache
               </Text>
             )}
@@ -276,7 +276,7 @@ export default function ConfiguracoesScreen() {
       </View>
 
       <View className="mt-5 px-5 mb-5">
-        <Text className="text-base font-semibold text-gray-700 mb-3">
+        <Text className="text-base font-semibold text-charcoal mb-3">
           Ações
         </Text>
         <TouchableOpacity

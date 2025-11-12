@@ -41,12 +41,12 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 justify-center px-5 bg-gray-100">
+    <View className="flex-1 justify-center px-5 bg-greige">
       <Image
         source={require("@/assets/images/logo-img.png")}
         className="self-center mb-5 w-24 h-24"
       />
-      <Text className="text-3xl font-bold mb-8 text-center text-gray-800">
+      <Text className="text-3xl font-bold mb-8 text-center text-charcoal">
         Login
       </Text>
       <View className="w-full">

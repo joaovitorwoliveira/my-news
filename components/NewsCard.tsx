@@ -29,19 +29,32 @@ export function NewsCard({ item }: NewsCardProps) {
 
   return (
     <TouchableOpacity
-      className="bg-white rounded-xl p-4 mb-4 shadow-sm"
+      className="bg-cream rounded-xl p-4 mb-4 shadow-sm border border-greige"
       onPress={handlePress}
       activeOpacity={0.7}
     >
       <View className="flex-row justify-between mb-2">
-        <Text className="text-xs font-semibold text-blue-600 uppercase">{item.category}</Text>
-        <Text className="text-xs text-gray-400">{item.publishedAt}</Text>
+        <Text className="text-xs font-semibold text-slate uppercase">
+          {item.category}
+        </Text>
+        <Text className="text-xs text-charcoal opacity-70">
+          {item.publishedAt}
+        </Text>
       </View>
-      <Text className="text-base font-bold text-gray-900 mb-2">{item.title}</Text>
-      <Text className="text-sm text-gray-600 leading-5 mb-2" numberOfLines={3}>
+      <Text className="text-base font-bold text-charcoal mb-2">
+        {item.title}
+      </Text>
+      <Text
+        className="text-sm text-charcoal opacity-80 leading-5 mb-2"
+        numberOfLines={3}
+      >
         {item.summary}
       </Text>
-      {item.source && <Text className="text-xs text-gray-500 font-medium mt-1">📰 {item.source}</Text>}
+      {item.source && (
+        <Text className="text-xs text-charcoal opacity-70 font-medium mt-1">
+          📰 {item.source}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

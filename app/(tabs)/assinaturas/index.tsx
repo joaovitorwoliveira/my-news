@@ -68,11 +68,11 @@ export default function AssinaturasScreen() {
   }, [refresh]);
 
   return (
-    <View className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-greige">
       <View className="flex-1 p-5">
         <View className="mb-6">
-          <Text className="text-3xl font-bold text-gray-800 mb-2">Suas Assinaturas</Text>
-          <Text className="text-base text-gray-500 leading-6">
+          <Text className="text-3xl font-bold text-charcoal mb-2">Suas Assinaturas</Text>
+          <Text className="text-base text-charcoal opacity-70 leading-6">
             {hasPreferences
               ? `Notícias das suas categorias favoritas (${user?.preferences?.categories?.length} categorias)`
               : "Configure suas preferências para ver notícias personalizadas"}
@@ -81,15 +81,15 @@ export default function AssinaturasScreen() {
 
         {!hasPreferences ? (
           <View className="flex-1 items-center justify-center py-16 px-5">
-            <Text className="text-xl font-bold text-gray-700 mb-3 text-center">
+            <Text className="text-xl font-bold text-charcoal mb-3 text-center">
               Configure suas preferências de categorias
             </Text>
-            <Text className="text-base text-gray-500 text-center leading-6 mb-6">
+            <Text className="text-base text-charcoal opacity-70 text-center leading-6 mb-6">
               Para ver notícias personalizadas aqui, vá em Configurações →
               Preferências e selecione as categorias que você deseja acompanhar.
             </Text>
             <TouchableOpacity
-              className="bg-blue-600 py-3 px-6 rounded-lg"
+              className="bg-slate py-3 px-6 rounded-lg"
               onPress={() => router.push("/(tabs)/configuracoes")}
             >
               <Text className="text-base font-semibold text-white">Ir para Configurações</Text>
@@ -105,21 +105,22 @@ export default function AssinaturasScreen() {
               <RefreshControl
                 refreshing={loading}
                 onRefresh={handleManualRefresh}
+                tintColor="#586875"
               />
             }
             ListEmptyComponent={() => (
               <View className="flex-1 items-center justify-center py-16 px-5">
                 {loading ? (
                   <>
-                    <ActivityIndicator size="large" color="#2563eb" />
-                    <Text className="text-base text-gray-500 text-center leading-6 mb-6">Carregando notícias...</Text>
+                    <ActivityIndicator size="large" color="#586875" />
+                    <Text className="text-base text-charcoal opacity-70 text-center leading-6 mb-6">Carregando notícias...</Text>
                   </>
                 ) : (
                   <>
-                    <Text className="text-xl font-bold text-gray-700 mb-3 text-center">
+                    <Text className="text-xl font-bold text-charcoal mb-3 text-center">
                       Nenhuma notícia encontrada
                     </Text>
-                    <Text className="text-base text-gray-500 text-center leading-6 mb-6">
+                    <Text className="text-base text-charcoal opacity-70 text-center leading-6 mb-6">
                       Não há notícias disponíveis para suas categorias
                       selecionadas no momento.
                     </Text>
@@ -132,9 +133,9 @@ export default function AssinaturasScreen() {
         )}
 
         {error && hasPreferences && (
-          <View className="bg-yellow-100 rounded-lg p-3 mt-4 border-l-4 border-yellow-500">
-            <Text className="text-sm font-semibold text-yellow-800 mb-1">⚠️ {error}</Text>
-            <Text className="text-xs text-yellow-900">
+          <View className="bg-mint rounded-lg p-3 mt-4 border-l-4 border-slate">
+            <Text className="text-sm font-semibold text-charcoal mb-1">⚠️ {error}</Text>
+            <Text className="text-xs text-charcoal opacity-80">
               Exibindo notícias de exemplo. Verifique sua conexão ou configure a
               API key.
             </Text>

@@ -18,9 +18,9 @@ export function Button({
     let classes = "rounded-lg items-center justify-center ";
 
     if (variant === "primary") {
-      classes += "bg-[#020202] ";
+      classes += "bg-slate ";
     } else {
-      classes += "bg-transparent border border-[#020202] ";
+      classes += "bg-transparent border-2 border-slate ";
     }
 
     if (size === "small") {
@@ -32,7 +32,7 @@ export function Button({
     }
 
     if (disabled) {
-      classes += "bg-gray-400 border-gray-400 ";
+      classes += "bg-mint border-mint opacity-60 ";
     }
 
     return classes;
@@ -44,11 +44,11 @@ export function Button({
     if (variant === "primary") {
       classes += "text-white ";
     } else {
-      classes += "text-gray-500 ";
+      classes += "text-charcoal ";
     }
 
     if (disabled) {
-      classes += "text-gray-600 ";
+      classes += "text-charcoal opacity-60 ";
     }
 
     return classes;
