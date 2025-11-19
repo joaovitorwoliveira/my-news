@@ -5,6 +5,7 @@ interface ButtonProps extends TouchableOpacityProps {
   title: string;
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
+  filled?: boolean;
 }
 
 export function Button({
@@ -12,13 +13,14 @@ export function Button({
   variant = "primary",
   size = "medium",
   disabled,
+  filled = false,
   ...props
 }: ButtonProps) {
   const getButtonClasses = () => {
     let classes = "rounded-lg items-center justify-center ";
 
     if (variant === "primary") {
-      classes += "bg-slate ";
+      classes += filled ? "bg-charcoal " : "bg-slate ";
     } else {
       classes += "bg-transparent border-2 border-slate ";
     }

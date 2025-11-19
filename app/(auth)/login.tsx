@@ -2,22 +2,41 @@ import { useAuth } from "@/hooks/useAuth";
 import { authService } from "@/services/auth";
 import { Redirect, router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
-import { Button, TextInput } from "../../components/ui";
+import { Image, Text, View } from "react-native";
+import { Button, TextInput, Toast } from "../../components/ui";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const { checkAuthStatus, isLoggedIn } = useAuth();
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isFormFilled = email.trim().length > 0 && password.trim().length > 0;
 
   if (isLoggedIn) {
     return <Redirect href="/(tabs)" />;
   }
 
+  const showToastMessage = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos");
+      showToastMessage("Por favor, preencha todos os campos");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      showToastMessage("Por favor, insira um email válido");
       return;
     }
 
@@ -30,11 +49,11 @@ export default function LoginScreen() {
         await checkAuthStatus();
         router.replace("/(tabs)");
       } else {
-        Alert.alert("Erro", result.message || "Erro ao fazer login");
+        showToastMessage(result.message || "Erro ao fazer login");
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      Alert.alert("Erro", "Ocorreu um erro inesperado");
+      showToastMessage("Ocorreu um erro inesperado");
     } finally {
       setIsLoading(false);
     }
@@ -42,9 +61,16 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1 justify-center px-5 bg-greige">
+      <Toast
+        message={toastMessage}
+        visible={showToast}
+        onHide={() => setShowToast(false)}
+      />
       <Image
         source={require("@/assets/images/logo-img.png")}
-        className="self-center mb-5 w-24 h-24"
+        className="self-center mb-5"
+        style={{ width: 96, height: 96 }}
+        resizeMode="contain"
       />
       <Text className="text-3xl font-bold mb-8 text-center text-charcoal">
         Login
@@ -72,6 +98,7 @@ export default function LoginScreen() {
             title={isLoading ? "Entrando..." : "Entrar"}
             onPress={handleLogin}
             disabled={isLoading}
+            filled={isFormFilled}
           />
         </View>
 

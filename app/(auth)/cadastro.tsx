@@ -117,12 +117,18 @@ export default function SignUpScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 20 }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "center",
+        padding: 20,
+      }}
       className="bg-greige"
     >
       <Image
         source={require("@/assets/images/logo-img.png")}
-        className="self-center mb-5 w-24 h-24"
+        className="self-center mb-5"
+        style={{ width: 96, height: 96 }}
+        resizeMode="contain"
       />
       <Text className="text-3xl font-bold mb-8 text-center text-charcoal">
         Cadastro
