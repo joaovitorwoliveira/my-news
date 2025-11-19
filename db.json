@@ -7,7 +7,9 @@
       "password": "Senha123!",
       "preferences": {
         "categories": [
-          "Política"
+          "Tecnologia",
+          "Mercado",
+          "Consumo"
         ]
       }
     },
